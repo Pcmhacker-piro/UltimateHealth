@@ -23,7 +23,7 @@ import {ArticleData, MonthStatus, YearStatus} from '../type';
 import Loader from './Loader';
 
 import {useFocusEffect} from '@react-navigation/native';
-import {Dropdown} from 'react-native-element-focus';
+import {Dropdown} from 'react-native-element-dropdown';
 import {useGetAuthorMonthlyReadReport} from '../hooks/useGetMonthlyReadReport';
 import {useGetAuthorMonthlyWriteReport} from '../hooks/useGetMonthlyWriteReport';
 import {useGetAuthorMostViewedArticles} from '../hooks/useGetMostViewedArticle';
@@ -49,6 +49,11 @@ const getArticleAuthorId = (authorId: ArticleData['authorId']): string => {
 };
 
 type LineDataItem = {
+  label: string;
+  value: number;
+};
+
+type DropdownItem = {
   label: string;
   value: number;
 };
@@ -592,7 +597,7 @@ const ActivityOverview = ({
                 labelField="label"
                 valueField="value"
                 value={selectedMonth}
-                onChange={item => {
+                onChange={(item: DropdownItem) => {
                   setSelectedMonth(item.value);
                   setSelectedYear(-1);
 
@@ -618,7 +623,7 @@ const ActivityOverview = ({
                 labelField="label"
                 valueField="value"
                 value={selectedYear}
-                onChange={item => {
+                onChange={(item: DropdownItem) => {
                   setSelectedYear(item.value);
                   setSelectedMonth(-1);
                 }}

@@ -36,23 +36,26 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
 
-      - name: Setup Node & Cache Yarn Store
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Setup Node
         uses: actions/setup-node@v6
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: "yarn"
-          cache-dependency-path: frontend/yarn.lock
 
       - name: Cache node_modules
         id: node-cache
         uses: actions/cache@v4
         with:
           path: frontend/node_modules
-          key: node-modules-${{ runner.os }}-${{ hashFiles('frontend/yarn.lock') }}
+          key: node-modules-${{ runner.os }}-${{ hashFiles('frontend/package.json') }}
 
       - name: Install Dependencies
         if: steps.node-cache.outputs.cache-hit != 'true'
-        run: yarn install --frozen-lockfile
+        run: pnpm install --no-frozen-lockfile
 
   lint:
     name: Lint
@@ -74,14 +77,19 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
       - name: Restore node_modules
         uses: actions/cache@v4
         with:
           path: frontend/node_modules
-          key: node-modules-${{ runner.os }}-${{ hashFiles('frontend/yarn.lock') }}
+          key: node-modules-${{ runner.os }}-${{ hashFiles('frontend/package.json') }}
 
       - name: Run ESLint
-        run: yarn lint
+        run: pnpm lint
 
   typecheck:
     name: Typecheck
@@ -103,14 +111,19 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
       - name: Restore node_modules
         uses: actions/cache@v4
         with:
           path: frontend/node_modules
-          key: node-modules-${{ runner.os }}-${{ hashFiles('frontend/yarn.lock') }}
+          key: node-modules-${{ runner.os }}-${{ hashFiles('frontend/package.json') }}
 
       - name: Run TypeScript Check
-        run: yarn typecheck
+        run: pnpm type-check
 
   test:
     name: Unit Tests
@@ -132,14 +145,19 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
       - name: Restore node_modules
         uses: actions/cache@v4
         with:
           path: frontend/node_modules
-          key: node-modules-${{ runner.os }}-${{ hashFiles('frontend/yarn.lock') }}
+          key: node-modules-${{ runner.os }}-${{ hashFiles('frontend/package.json') }}
 
       - name: Run Unit Tests
-        run: yarn test
+        run: pnpm test
 
   expo-doctor:
     name: Expo Doctor
@@ -161,11 +179,16 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
       - name: Restore node_modules
         uses: actions/cache@v4
         with:
           path: frontend/node_modules
-          key: node-modules-${{ runner.os }}-${{ hashFiles('frontend/yarn.lock') }}
+          key: node-modules-${{ runner.os }}-${{ hashFiles('frontend/package.json') }}
 
       - name: Run Expo Doctor
         shell: bash

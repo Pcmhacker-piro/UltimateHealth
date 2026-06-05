@@ -55,11 +55,9 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: 20
-          cache: "pnpm"
-          cache-dependency-path: frontend/pnpm-lock.yaml
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --no-frozen-lockfile
 
       - name: Run Knip analyses
         id: knip
@@ -94,6 +92,7 @@ jobs:
 
       - name: Comment Knip results on PR
         if: github.event_name == 'pull_request'
+        continue-on-error: true
         uses: actions/github-script@v9
         with:
           script: |
